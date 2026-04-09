@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c025b4487bfbb41fca186c7d9d6e18a5, type: 3}
-  m_Name: Orc_data
-  m_EditorClassIdentifier: 
-  card_name: Orc
-  description: Slow and strong, likes to swing big axe!
-  health: 200
-  speed: 40
-  damage: 90
-  sprite: {fileID: 21300000, guid: d5ece8b70c4be4f1a99847e09387c1e1, type: 3}
-  card_script: {fileID: 11500000, guid: ce82721597c9845509c86a7fa8528597, type: 3}
+  m_Name: Skeleton_data
+  m_EditorClassIdentifier: Assembly-CSharp::Card_data
+  card_name: Skeleton
+  description: A fast, frail boney warrior.
+  health: 100
+  speed: 90
+  damage: 80
+  sprite: {fileID: -2510476293373519475, guid: 2a39c55d191d3405f881708d5b41d560, type: 3}

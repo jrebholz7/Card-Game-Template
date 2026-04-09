@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class Card : MonoBehaviour
 {
@@ -14,13 +15,13 @@ public class Card : MonoBehaviour
     public int speed;
     public int damage;
     public Sprite sprite;
+    public MonoScript card_script;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI healthText;
     public TextMeshProUGUI costText;
     public TextMeshProUGUI damageText;
     public Image spriteImage;
-        
 
     // Start is called before the first frame update
     void Start()
