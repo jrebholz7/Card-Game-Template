@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c025b4487bfbb41fca186c7d9d6e18a5, type: 3}
   m_Name: Human_data
   m_EditorClassIdentifier: Assembly-CSharp::Card_data
-  card_name: 
-  description: 
-  health: 10
+  card_name: Human
+  description: A normal human, nothing special
+  health: 150
   speed: 80
   damage: 2
   sprite: {fileID: -2510476293373519475, guid: 2a39c55d191d3405f881708d5b41d560, type: 3}
