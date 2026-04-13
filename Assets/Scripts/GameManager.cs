@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
     public List<Card_data> ai_hand = new List<Card_data>();
     public List<Card_data> discard_pile = new List<Card_data>();
     public Canvas canvas;
+    public Card blank;
+    public Vector3 player_hand_spawnpoint;
+    public Vector3 offset;
 
     private void Awake()
     {
@@ -39,20 +42,38 @@ public class GameManager : MonoBehaviour
 
     void Deal()
     {
-        
+        Shuffle(player_deck);
+        Shuffle(ai_deck);
+        for (int i = 0; i < 5; i++)
+        {
+            //player_hand.Add(player_deck[i]);
+            Card current_card = Instantiate(blank, player_hand_spawnpoint + offset, Quaternion.identity, canvas.transform);
+            offset.x += 300;
+            current_card.data = player_deck[i];
+            player_deck.Remove(current_card.data);
+            player_hand.Add(current_card.data);
+            //current_card.transform.SetParent(canvas.transform);
+        }
+
+        for (int i = 0; i<ai_deck.Count; i++)
+        {
+            ai_hand.Add(ai_deck[i]);
+        }
     }
 
-    void Shuffle()
+    void Shuffle(List<Card_data> _deck)
     {
-        
+        System.Random rng = new System.Random();
+        for (int i = 0; i < _deck.Count; i++)
+        {
+            int j = rng.Next(_deck.Count);
+            Card_data temp = _deck[i];
+            _deck[i] = _deck[j];
+            _deck[j] = temp;
+        }
     }
-
     void AI_Turn()
     {
         
-    }
-
-
-
-    
+    }    
 }

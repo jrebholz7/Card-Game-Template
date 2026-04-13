@@ -12,6 +12,7 @@ public class Orc_Script : MonoBehaviour
     public Sprite attack_3_sprite;
     private int attack_2_cooldown = 0;
     private int attack_3_cooldown = 0;
+    private Canvas canvas;
 
     GameManager GM;
     void Start()

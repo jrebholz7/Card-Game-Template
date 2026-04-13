@@ -1457,12 +1457,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   deck: []
-  player_deck: []
-  ai_deck: []
+  player_deck:
+  - {fileID: 11400000, guid: a9f2c8aa761aa4110a828b8a0a5aa29c, type: 2}
+  - {fileID: 11400000, guid: 33e2634b0f2e841eabb970bbf404ddca, type: 2}
+  - {fileID: 11400000, guid: f47ee261bb07b4cebb843e2ba47aa506, type: 2}
+  ai_deck:
+  - {fileID: 11400000, guid: a9f2c8aa761aa4110a828b8a0a5aa29c, type: 2}
+  - {fileID: 11400000, guid: 33e2634b0f2e841eabb970bbf404ddca, type: 2}
+  - {fileID: 11400000, guid: f47ee261bb07b4cebb843e2ba47aa506, type: 2}
   player_hand: []
   ai_hand: []
   discard_pile: []
   canvas: {fileID: 0}
+  blank: {fileID: 8301515172001902602, guid: 27e6e4a994e974599b618a479443f39d, type: 3}
+  player_hand_spawnpoint: {x: 0, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: 0}
 --- !u!4 &856168556
 Transform:
   m_ObjectHideFlags: 0
