@@ -46,4 +46,20 @@ public class Card : MonoBehaviour
     {
         
     }
+
+    public void UpdateCard()
+    {
+        card_name = data.card_name;
+        description = data.description;
+        health = data.health;
+        speed = data.speed;
+        damage = data.damage;
+        sprite = data.sprite;
+        nameText.text = card_name;
+        descriptionText.text = description;
+        healthText.text = health.ToString();
+        costText.text = speed.ToString();
+        damageText.text = damage.ToString();
+        spriteImage.sprite = sprite;
+    }
 }
