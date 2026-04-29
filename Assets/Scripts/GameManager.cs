@@ -53,7 +53,10 @@ public class GameManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         Deal(Player_card, "Player");
         Deal(Ai_card, "AI");
-        Game_order("Player");
+        
+        // Determine turn order based on card speed
+        string firstPlayer = Player_card.data.speed >= Ai_card.data.speed ? "Player" : "AI";
+        Game_order(firstPlayer);
     }
 
     // Update is called once per frame
@@ -98,7 +101,7 @@ public class GameManager : MonoBehaviour
     {
         if (deckType == "Player")
         {
-            if (player_deck.Count > 0)
+            while (Player_card.data.health <= 0 && player_deck.Count > 0)
             {
                 replacement.data = player_deck[0].Clone();
                 Player_card.data = replacement.data;
@@ -107,9 +110,14 @@ public class GameManager : MonoBehaviour
                 player_hand.Add(replacement.data);
                 player_deck.RemoveAt(0);
             }
+            if (Player_card.data.health <= 0 && player_deck.Count == 0)
+            {
+                // Player is out of deck and current card is dead - game ends with AI winning
+                GameEnd("AI");
+            }
         } else if (deckType == "AI")
         {
-            if (ai_deck.Count > 0)
+            while (Ai_card.data.health <= 0 && ai_deck.Count > 0)
             {
                 replacement.data = ai_deck[0].Clone();
                 Ai_card.data = replacement.data;
@@ -117,6 +125,11 @@ public class GameManager : MonoBehaviour
                 ai_hand.RemoveAt(0);
                 ai_hand.Add(replacement.data);
                 ai_deck.RemoveAt(0);
+            }
+            if (Ai_card.data.health <= 0 && ai_deck.Count == 0)
+            {
+                // AI is out of deck and current card is dead - game ends with Player winning
+                GameEnd("Player");
             }
         }
     }
@@ -139,21 +152,11 @@ public class GameManager : MonoBehaviour
     {
         Attack_1.gameObject.SetActive(false);
         Attack_2.gameObject.SetActive(true);
-        if (Ai_card.data.health <= 0)
-        {
-            ReplaceCard(Ai_card, "AI");
-        }
-
     }
     void Player_Turn()
     {
         Attack_1.gameObject.SetActive(true);
         Attack_2.gameObject.SetActive(false);
-        if (Player_card.data.health <= 0)
-        {
-            ReplaceCard(Player_card, "Player");
-        }
-
     }
     public void Game_order(string player)
     {
@@ -164,6 +167,16 @@ public class GameManager : MonoBehaviour
         {
             AI_Turn();
         }
+    }
+    
+    void GameEnd(string winner)
+    {
+        Debug.Log(winner + " wins! Game Over.");
+        Attack_1.gameObject.SetActive(false);
+        Attack_2.gameObject.SetActive(false);
+        Player_card.gameObject.SetActive(false);
+        Ai_card.gameObject.SetActive(false);
+        canvas.gameObject.SetActive(false);
     }
     
 }

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   card_name: Orc
   description: Slow and strong, likes to swing big axe!
-  health: 1000
+  health: 180
   speed: 40
-  damage: 90
+  damage: 70
   sprite: {fileID: 21300000, guid: d5ece8b70c4be4f1a99847e09387c1e1, type: 3}
   card_script: {fileID: 11500000, guid: ce82721597c9845509c86a7fa8528597, type: 3}
