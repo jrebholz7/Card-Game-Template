@@ -17,5 +17,5 @@ MonoBehaviour:
   health: 200
   speed: 50
   damage: 50
-  sprite: {fileID: -2510476293373519475, guid: 2a39c55d191d3405f881708d5b41d560, type: 3}
+  sprite: {fileID: -1603291472181913768, guid: ba49a53102dad462680f02f242fdee07, type: 3}
   card_script: {fileID: 0}
