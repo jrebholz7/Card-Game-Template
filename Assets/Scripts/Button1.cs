@@ -22,22 +22,33 @@ public class ButtonController : MonoBehaviour
         {
             GameManager.gm.Ai_card.data.health -= GameManager.gm.Player_card.data.damage;
             GameManager.gm.Ai_card.UpdateCard();
+            GameManager.gm.UpdateAttackText("Player", "basic attack");
             // Check if AI card died and replace if necessary
             if (GameManager.gm.Ai_card.data.health <= 0)
             {
                 GameManager.gm.ReplaceCard(GameManager.gm.Ai_card, "AI");
             }
             GameManager.gm.Game_order("AI");
-        } else if (buttonName == "Attack_2")
+        } else if (buttonName == "Attack_1_2")
         {
-            GameManager.gm.Player_card.data.health -= GameManager.gm.Ai_card.data.damage;
-            GameManager.gm.Player_card.UpdateCard();
-            // Check if Player card died and replace if necessary
-            if (GameManager.gm.Player_card.data.health <= 0)
+            if (GameManager.gm.IsAttack_1_2Available())
             {
-                GameManager.gm.ReplaceCard(GameManager.gm.Player_card, "Player");
+                int doubleDamage = GameManager.gm.Player_card.data.damage * 2;
+                GameManager.gm.Ai_card.data.health -= doubleDamage;
+                GameManager.gm.Ai_card.UpdateCard();
+                GameManager.gm.UseAttack_1_2();
+                GameManager.gm.UpdateAttackText("Player", "double damage attack");
+                Debug.Log("Player uses double damage attack! Cooldown: 5 turns");
+                // Check if AI card died and replace if necessary
+                if (GameManager.gm.Ai_card.data.health <= 0)
+                {
+                    GameManager.gm.ReplaceCard(GameManager.gm.Ai_card, "AI");
+                }
+                GameManager.gm.Game_order("AI");
+            } else
+            {
+                Debug.Log("Attack_1_2 is on cooldown! Remaining cooldown: " + GameManager.gm.GetAttack_1_2Cooldown());
             }
-            GameManager.gm.Game_order("Player");
         }
     }
 }

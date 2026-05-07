@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Mono.Cecil.Cil;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using UnityEditor.Rendering;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,7 +22,15 @@ public class GameManager : MonoBehaviour
     public Vector3 player_hand_spawnpoint;
     public Vector3 offset;
     public UnityEngine.UI.Button Attack_1;
-    public UnityEngine.UI.Button Attack_2;
+    public UnityEngine.UI.Button Attack_1_2;
+    public TextMeshProUGUI Attack_used;
+    public TextMeshProUGUI Ai_cards_left;
+    public TextMeshProUGUI Player_cards_left;
+    
+    // Cooldown tracking for special attacks
+    private int attack_1_2_cooldown = 0;  // Player's double damage attack
+    private int attack_2_2_cooldown = 0;  // AI's double damage attack
+    private bool game_ended = false;  // Track if the game has ended
 
     private void Awake()
     {
@@ -41,18 +51,29 @@ public class GameManager : MonoBehaviour
         Player_card = GameObject.Find("Player_card").GetComponent<Card>();
         Ai_card = GameObject.Find("Ai_card").GetComponent<Card>();
         Attack_1 = GameObject.Find("Attack_1").GetComponent<UnityEngine.UI.Button>();
-        Attack_2 = GameObject.Find("Attack_2").GetComponent<UnityEngine.UI.Button>();
+        Attack_1_2 = GameObject.Find("Attack_1_2").GetComponent<UnityEngine.UI.Button>();
+        Attack_used = GameObject.Find("Attack_used").GetComponent<TextMeshProUGUI>();
+        Ai_cards_left = GameObject.Find("Ai_cards_left").GetComponent<TextMeshProUGUI>();
+        Player_cards_left = GameObject.Find("Player_cards_left").GetComponent<TextMeshProUGUI>();
         StartCoroutine(ShuffleDecksSequentially());
     }
 
     IEnumerator ShuffleDecksSequentially()
     {
+        // Populate player and AI decks with 6 cards each from the main deck
+        for (int i = 0; i < 6 && i < deck.Count; i++)
+        {
+            player_deck.Add(deck[i].Clone());
+            ai_deck.Add(deck[i].Clone());
+        }
+        
         Shuffle(player_deck);
         yield return new WaitForEndOfFrame();
         Shuffle(ai_deck);
         yield return new WaitForEndOfFrame();
         Deal(Player_card, "Player");
         Deal(Ai_card, "AI");
+        UpdateCardCounts();
         
         // Determine turn order based on card speed
         string firstPlayer = Player_card.data.speed >= Ai_card.data.speed ? "Player" : "AI";
@@ -68,31 +89,27 @@ public class GameManager : MonoBehaviour
     void Deal(Card replacement, string deckType)
     {
         Debug.Log("Dealing function called");
-        for (int i = 0; i < 5; i++)
+        if (deckType == "Player")
         {
-            Debug.Log("for statement");
-            if (deckType == "Player")
+            if (player_deck.Count > 0)
             {
-                if (player_deck.Count > 0)
-                {
-                    Debug.Log("if statement works");
-                    replacement.data = player_deck[0].Clone();
-                    Player_card.data = replacement.data;
-                    Player_card.UpdateCard();
-                    player_hand.Add(replacement.data);
-                    player_deck.RemoveAt(0);
-                }
-            } else if (deckType == "AI")
+                Debug.Log("if statement works");
+                replacement.data = player_deck[0].Clone();
+                Player_card.data = replacement.data;
+                Player_card.UpdateCard();
+                player_hand.Add(replacement.data);
+                player_deck.RemoveAt(0);
+            }
+        } else if (deckType == "AI")
+        {
+            if (ai_deck.Count > 0)
             {
-                if (ai_deck.Count > 0)
-                {
-                    Debug.Log("if statement works but from ai");
-                    replacement.data = ai_deck[0].Clone();
-                    Ai_card.data = replacement.data;
-                    Ai_card.UpdateCard();
-                    ai_hand.Add(replacement.data);
-                    ai_deck.RemoveAt(0);
-                }
+                Debug.Log("if statement works but from ai");
+                replacement.data = ai_deck[0].Clone();
+                Ai_card.data = replacement.data;
+                Ai_card.UpdateCard();
+                ai_hand.Add(replacement.data);
+                ai_deck.RemoveAt(0);
             }
         }
     }
@@ -106,13 +123,19 @@ public class GameManager : MonoBehaviour
                 replacement.data = player_deck[0].Clone();
                 Player_card.data = replacement.data;
                 Player_card.UpdateCard();
-                player_hand.RemoveAt(0);
+                if (player_hand.Count > 0)
+                {
+                    player_hand.RemoveAt(0);
+                }
                 player_hand.Add(replacement.data);
                 player_deck.RemoveAt(0);
+                // Reset double damage cooldown when a new card is created
+                attack_1_2_cooldown = 0;
+                UpdateCardCounts();
             }
-            if (Player_card.data.health <= 0 && player_deck.Count == 0)
+            // Only end the game if there are no more cards in deck AND the current card is dead
+            if (player_deck.Count == 0 && Player_card.data.health <= 0)
             {
-                // Player is out of deck and current card is dead - game ends with AI winning
                 GameEnd("AI");
             }
         } else if (deckType == "AI")
@@ -122,13 +145,19 @@ public class GameManager : MonoBehaviour
                 replacement.data = ai_deck[0].Clone();
                 Ai_card.data = replacement.data;
                 Ai_card.UpdateCard();
-                ai_hand.RemoveAt(0);
+                if (ai_hand.Count > 0)
+                {
+                    ai_hand.RemoveAt(0);
+                }
                 ai_hand.Add(replacement.data);
                 ai_deck.RemoveAt(0);
+                // Reset double damage cooldown when a new card is created
+                attack_2_2_cooldown = 0;
+                UpdateCardCounts();
             }
-            if (Ai_card.data.health <= 0 && ai_deck.Count == 0)
+            // Only end the game if there are no more cards in deck AND the current card is dead
+            if (ai_deck.Count == 0 && Ai_card.data.health <= 0)
             {
-                // AI is out of deck and current card is dead - game ends with Player winning
                 GameEnd("Player");
             }
         }
@@ -150,16 +179,131 @@ public class GameManager : MonoBehaviour
     }
     void AI_Turn()
     {
+        ReduceCooldowns();
         Attack_1.gameObject.SetActive(false);
-        Attack_2.gameObject.SetActive(true);
+        Attack_1_2.gameObject.SetActive(false);
+        
+        // AI automatically attacks
+        StartCoroutine(ExecuteAIAttack());
+    }
+    
+    IEnumerator ExecuteAIAttack()
+    {
+        yield return new WaitForSeconds(1f);  // Add delay for better UX
+        
+        // If double damage is available, use it; otherwise use basic attack
+        if (IsAttack_2_2Available())
+        {
+            int doubleDamage = Ai_card.data.damage * 2;
+            Player_card.data.health -= doubleDamage;
+            Player_card.UpdateCard();
+            UseAttack_2_2();
+            UpdateAttackText("AI", "double damage attack");
+            Debug.Log("AI uses double damage attack! Cooldown: 5 turns");
+            
+            if (Player_card.data.health <= 0)
+            {
+                ReplaceCard(Player_card, "Player");
+            }
+        }
+        else
+        {
+            // Use basic attack
+            Player_card.data.health -= Ai_card.data.damage;
+            Player_card.UpdateCard();
+            UpdateAttackText("AI", "basic attack");
+            Debug.Log("AI uses basic attack!");
+            
+            if (Player_card.data.health <= 0)
+            {
+                ReplaceCard(Player_card, "Player");
+            }
+        }
+        
+        Game_order("Player");
     }
     void Player_Turn()
     {
+        ReduceCooldowns();
         Attack_1.gameObject.SetActive(true);
-        Attack_2.gameObject.SetActive(false);
+        Attack_1_2.gameObject.SetActive(attack_1_2_cooldown == 0);
     }
+    
+    void ReduceCooldowns()
+    {
+        if (attack_1_2_cooldown > 0)
+            attack_1_2_cooldown--;
+        if (attack_2_2_cooldown > 0)
+            attack_2_2_cooldown--;
+    }
+    
+    public bool IsAttack_1_2Available()
+    {
+        return attack_1_2_cooldown == 0;
+    }
+    
+    public void UseAttack_1_2()
+    {
+        attack_1_2_cooldown = 5;
+    }
+    
+    public bool IsAttack_2_2Available()
+    {
+        return attack_2_2_cooldown == 0;
+    }
+    
+    public void UseAttack_2_2()
+    {
+        attack_2_2_cooldown = 5;
+    }
+    
+    public int GetAttack_1_2Cooldown()
+    {
+        return attack_1_2_cooldown;
+    }
+    
+    public int GetAttack_2_2Cooldown()
+    {
+        return attack_2_2_cooldown;
+    }
+    
+    public void UpdateAttackText(string attacker, string attackType)
+    {
+        if (attacker == "Player")
+        {
+            Attack_used.text = "Player used " + attackType;
+        }
+        else if (attacker == "AI")
+        {
+            Attack_used.text = "AI used " + attackType;
+        }
+    }
+    
+    public void UpdateCardCounts()
+    {
+        Player_cards_left.text = "Player Cards Left: " + player_deck.Count;
+        Ai_cards_left.text = "AI Cards Left: " + ai_deck.Count;
+    }
+    
+    public void UpdateWinnerText(string winner)
+    {
+        if (winner == "Player")
+        {
+            Attack_used.text = "Player wins!";
+        }
+        else if (winner == "AI")
+        {
+            Attack_used.text = "AI wins!";
+        }
+    }
+    
     public void Game_order(string player)
     {
+        if (game_ended)
+        {
+            return;  // Don't allow any turns after game has ended
+        }
+        
         if (player == "Player")
         {
             Player_Turn();
@@ -171,12 +315,14 @@ public class GameManager : MonoBehaviour
     
     void GameEnd(string winner)
     {
+        game_ended = true;  // Mark the game as ended
         Debug.Log(winner + " wins! Game Over.");
+        UpdateWinnerText(winner);
         Attack_1.gameObject.SetActive(false);
-        Attack_2.gameObject.SetActive(false);
+        Attack_1_2.gameObject.SetActive(false);
         Player_card.gameObject.SetActive(false);
         Ai_card.gameObject.SetActive(false);
-        canvas.gameObject.SetActive(false);
+        
     }
     
 }
