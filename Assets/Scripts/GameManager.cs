@@ -191,8 +191,8 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);  // Add delay for better UX
         
-        // If double damage is available, use it; otherwise use basic attack
-        if (IsAttack_2_2Available())
+        // If double damage is available and normal damage wouldn't kill opponent, use it
+        if (IsAttack_2_2Available() && Ai_card.data.damage < Player_card.data.health)
         {
             int doubleDamage = Ai_card.data.damage * 2;
             Player_card.data.health -= doubleDamage;
