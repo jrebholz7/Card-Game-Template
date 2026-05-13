@@ -88,12 +88,10 @@ public class GameManager : MonoBehaviour
 
     void Deal(Card replacement, string deckType)
     {
-        Debug.Log("Dealing function called");
         if (deckType == "Player")
         {
             if (player_deck.Count > 0)
             {
-                Debug.Log("if statement works");
                 replacement.data = player_deck[0].Clone();
                 Player_card.data = replacement.data;
                 Player_card.UpdateCard();
@@ -104,7 +102,6 @@ public class GameManager : MonoBehaviour
         {
             if (ai_deck.Count > 0)
             {
-                Debug.Log("if statement works but from Ai");
                 replacement.data = ai_deck[0].Clone();
                 Ai_card.data = replacement.data;
                 Ai_card.UpdateCard();
@@ -199,7 +196,6 @@ public class GameManager : MonoBehaviour
             Player_card.UpdateCard();
             UseAttack_2_2();
             UpdateAttackText("Ai", "double damage attack");
-            Debug.Log("Ai uses double damage attack! Cooldown: 5 turns");
             
             if (Player_card.data.health <= 0)
             {
@@ -212,7 +208,6 @@ public class GameManager : MonoBehaviour
             Player_card.data.health -= Ai_card.data.damage;
             Player_card.UpdateCard();
             UpdateAttackText("Ai", "basic attack");
-            Debug.Log("Ai uses basic attack!");
             
             if (Player_card.data.health <= 0)
             {
@@ -316,7 +311,6 @@ public class GameManager : MonoBehaviour
     void GameEnd(string winner)
     {
         game_ended = true;  // Mark the game as ended
-        Debug.Log(winner + " wins! Game Over.");
         UpdateWinnerText(winner);
         Attack_1.gameObject.SetActive(false);
         Attack_1_2.gameObject.SetActive(false);

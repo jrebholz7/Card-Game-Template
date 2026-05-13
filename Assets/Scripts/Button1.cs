@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.UI;
 public class ButtonController : MonoBehaviour
@@ -17,7 +18,6 @@ public class ButtonController : MonoBehaviour
     void OnButtonClicked()
     {
         string buttonName = gameObject.name;
-        Debug.Log(buttonName + " was clicked!");
         if (buttonName == "Attack_1")
         {
             GameManager.gm.Ai_card.data.health -= GameManager.gm.Player_card.data.damage;
@@ -38,7 +38,6 @@ public class ButtonController : MonoBehaviour
                 GameManager.gm.Ai_card.UpdateCard();
                 GameManager.gm.UseAttack_1_2();
                 GameManager.gm.UpdateAttackText("Player", "double damage attack");
-                Debug.Log("Player uses double damage attack! Cooldown: 5 turns");
                 // Check if AI card died and replace if necessary
                 if (GameManager.gm.Ai_card.data.health <= 0)
                 {
@@ -47,7 +46,7 @@ public class ButtonController : MonoBehaviour
                 GameManager.gm.Game_order("Ai");
             } else
             {
-                Debug.Log("Attack_1_2 is on cooldown! Remaining cooldown: " + GameManager.gm.GetAttack_1_2Cooldown());
+                Debug.Log("Double damage attack is on cooldown! Please wait.");
             }
         }
     }
