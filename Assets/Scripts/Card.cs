@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEditor;
+using System.Runtime.InteropServices;
 
 public class Card : MonoBehaviour
 {

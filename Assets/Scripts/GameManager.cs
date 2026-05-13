@@ -72,11 +72,11 @@ public class GameManager : MonoBehaviour
         Shuffle(ai_deck);
         yield return new WaitForEndOfFrame();
         Deal(Player_card, "Player");
-        Deal(Ai_card, "AI");
+        Deal(Ai_card, "Ai");
         UpdateCardCounts();
         
         // Determine turn order based on card speed
-        string firstPlayer = Player_card.data.speed >= Ai_card.data.speed ? "Player" : "AI";
+        string firstPlayer = Player_card.data.speed >= Ai_card.data.speed ? "Player" : "Ai";
         Game_order(firstPlayer);
     }
 
@@ -100,11 +100,11 @@ public class GameManager : MonoBehaviour
                 player_hand.Add(replacement.data);
                 player_deck.RemoveAt(0);
             }
-        } else if (deckType == "AI")
+        } else if (deckType == "Ai")
         {
             if (ai_deck.Count > 0)
             {
-                Debug.Log("if statement works but from ai");
+                Debug.Log("if statement works but from Ai");
                 replacement.data = ai_deck[0].Clone();
                 Ai_card.data = replacement.data;
                 Ai_card.UpdateCard();
@@ -136,9 +136,9 @@ public class GameManager : MonoBehaviour
             // Only end the game if there are no more cards in deck AND the current card is dead
             if (player_deck.Count == 0 && Player_card.data.health <= 0)
             {
-                GameEnd("AI");
+                GameEnd("Ai");
             }
-        } else if (deckType == "AI")
+        } else if (deckType == "Ai")
         {
             while (Ai_card.data.health <= 0 && ai_deck.Count > 0)
             {
@@ -198,8 +198,8 @@ public class GameManager : MonoBehaviour
             Player_card.data.health -= doubleDamage;
             Player_card.UpdateCard();
             UseAttack_2_2();
-            UpdateAttackText("AI", "double damage attack");
-            Debug.Log("AI uses double damage attack! Cooldown: 5 turns");
+            UpdateAttackText("Ai", "double damage attack");
+            Debug.Log("Ai uses double damage attack! Cooldown: 5 turns");
             
             if (Player_card.data.health <= 0)
             {
@@ -211,8 +211,8 @@ public class GameManager : MonoBehaviour
             // Use basic attack
             Player_card.data.health -= Ai_card.data.damage;
             Player_card.UpdateCard();
-            UpdateAttackText("AI", "basic attack");
-            Debug.Log("AI uses basic attack!");
+            UpdateAttackText("Ai", "basic attack");
+            Debug.Log("Ai uses basic attack!");
             
             if (Player_card.data.health <= 0)
             {
@@ -273,16 +273,16 @@ public class GameManager : MonoBehaviour
         {
             Attack_used.text = "Player used " + attackType;
         }
-        else if (attacker == "AI")
+        else if (attacker == "Ai")
         {
-            Attack_used.text = "AI used " + attackType;
+            Attack_used.text = "Ai used " + attackType;
         }
     }
     
     public void UpdateCardCounts()
     {
         Player_cards_left.text = "Player Cards Left: " + player_deck.Count;
-        Ai_cards_left.text = "AI Cards Left: " + ai_deck.Count;
+        Ai_cards_left.text = "Ai Cards Left: " + ai_deck.Count;
     }
     
     public void UpdateWinnerText(string winner)
@@ -291,9 +291,9 @@ public class GameManager : MonoBehaviour
         {
             Attack_used.text = "Player wins!";
         }
-        else if (winner == "AI")
+        else if (winner == "Ai")
         {
-            Attack_used.text = "AI wins!";
+            Attack_used.text = "Ai wins!";
         }
     }
     
@@ -307,7 +307,7 @@ public class GameManager : MonoBehaviour
         if (player == "Player")
         {
             Player_Turn();
-        } else if (player == "AI")
+        } else if (player == "Ai")
         {
             AI_Turn();
         }
