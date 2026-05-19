@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c025b4487bfbb41fca186c7d9d6e18a5, type: 3}
+  m_Name: Artificial_Intelligence_data
+  m_EditorClassIdentifier: Assembly-CSharp::Card_data
+  card_name: AI
+  description: Blazing bytes
+  health: 150
+  speed: 12
+  damage: 100
+  sprite: {fileID: 8382916560581444670, guid: 7acdd880d08084b9b9aff52a71bfc2f5, type: 3}
+  card_script: {fileID: 0}

@@ -377,19 +377,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deck: []
   player_deck:
+  - {fileID: 11400000, guid: 110921db683dc4b498a1cae1abdeab4f, type: 2}
+  - {fileID: 11400000, guid: e180710e8438c40b5a0cb812f289bf72, type: 2}
   - {fileID: 11400000, guid: a9f2c8aa761aa4110a828b8a0a5aa29c, type: 2}
   - {fileID: 11400000, guid: 33e2634b0f2e841eabb970bbf404ddca, type: 2}
-  - {fileID: 11400000, guid: f47ee261bb07b4cebb843e2ba47aa506, type: 2}
   - {fileID: 11400000, guid: c466e31cdba0640b6b3c08b11b741d0e, type: 2}
-  - {fileID: 11400000, guid: e180710e8438c40b5a0cb812f289bf72, type: 2}
-  - {fileID: 11400000, guid: 110921db683dc4b498a1cae1abdeab4f, type: 2}
+  - {fileID: 11400000, guid: f47ee261bb07b4cebb843e2ba47aa506, type: 2}
+  - {fileID: 11400000, guid: c9c6d51a95c8b4e5eb85ab2b16469fd1, type: 2}
+  - {fileID: 11400000, guid: b7b8d1422530041e28d8338e0c775b4e, type: 2}
   ai_deck:
-  - {fileID: 11400000, guid: a9f2c8aa761aa4110a828b8a0a5aa29c, type: 2}
-  - {fileID: 11400000, guid: f47ee261bb07b4cebb843e2ba47aa506, type: 2}
-  - {fileID: 11400000, guid: 33e2634b0f2e841eabb970bbf404ddca, type: 2}
   - {fileID: 11400000, guid: e180710e8438c40b5a0cb812f289bf72, type: 2}
+  - {fileID: 11400000, guid: a9f2c8aa761aa4110a828b8a0a5aa29c, type: 2}
+  - {fileID: 11400000, guid: 33e2634b0f2e841eabb970bbf404ddca, type: 2}
   - {fileID: 11400000, guid: c466e31cdba0640b6b3c08b11b741d0e, type: 2}
+  - {fileID: 11400000, guid: f47ee261bb07b4cebb843e2ba47aa506, type: 2}
+  - {fileID: 11400000, guid: c9c6d51a95c8b4e5eb85ab2b16469fd1, type: 2}
   - {fileID: 11400000, guid: 110921db683dc4b498a1cae1abdeab4f, type: 2}
+  - {fileID: 11400000, guid: b7b8d1422530041e28d8338e0c775b4e, type: 2}
   player_hand: []
   ai_hand: []
   discard_pile: []
